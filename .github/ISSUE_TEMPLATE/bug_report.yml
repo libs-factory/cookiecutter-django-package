@@ -1,0 +1,61 @@
+name: 🐛 Bug Report
+description: Create a report to help us improve
+labels: [ "bug", "triage" ]
+body:
+- type: markdown
+  attributes:
+    value: |
+      Thanks for taking the time to fill out this bug report!
+
+- type: input
+  id: django-version
+  attributes:
+    label: Django Version
+    description: What version of Django are you running?
+    placeholder: "3.2.0"
+  validations:
+    required: true
+
+- type: input
+  id: python-version
+  attributes:
+    label: Python Version
+    description: What version of Python are you running?
+    placeholder: "3.8.0"
+  validations:
+    required: true
+
+- type: textarea
+  id: what-happened
+  attributes:
+    label: What happened?
+    description: Also tell us, what did you expect to happen?
+    placeholder: "A clear and concise description of what the bug is."
+  validations:
+    required: true
+
+- type: textarea
+  id: reproduction
+  attributes:
+    label: Reproduction steps
+    description: How do you trigger this bug? Please walk us through it step by step.
+    value: |
+      1. Go to '...'
+      2. Click on '....'
+      3. Scroll down to '....'
+      4. See error
+  validations:
+    required: true
+
+- type: textarea
+  id: logs
+  attributes:
+    label: Relevant log output
+    description: Please copy and paste any relevant log output. This will be automatically formatted into code.
+    render: shell
+
+- type: textarea
+  id: additional-context
+  attributes:
+    label: Additional context
+    description: Add any other context about the problem here.

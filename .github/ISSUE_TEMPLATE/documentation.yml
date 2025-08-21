@@ -1,0 +1,42 @@
+name: 📚 Documentation
+description: Report an issue related to documentation
+labels: [ "documentation" ]
+body:
+- type: markdown
+  attributes:
+    value: |
+      Thanks for taking the time to improve our documentation!
+
+- type: dropdown
+  id: type
+  attributes:
+    label: Type of documentation issue
+    options:
+    - Unclear documentation
+    - Missing documentation
+    - Incorrect documentation
+    - Outdated documentation
+    - Other
+  validations:
+    required: true
+
+- type: input
+  id: location
+  attributes:
+    label: Location
+    description: Where is the documentation issue located?
+    placeholder: "docs/installation.md"
+
+- type: textarea
+  id: description
+  attributes:
+    label: Describe the issue
+    description: A clear and concise description of what the issue is.
+  validations:
+    required: true
+
+- type: textarea
+  id: suggestion
+  attributes:
+    label: Suggested improvement
+    description: How do you think we could improve this documentation?
