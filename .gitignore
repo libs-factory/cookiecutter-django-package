@@ -1,0 +1,5 @@
+.claude/
+.context/
+.cookiecutter-replay/
+.tmp/
+.sample/
