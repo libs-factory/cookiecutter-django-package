@@ -1,0 +1,17 @@
+{
+  "name": "Cookiecutter Django Package",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh"
+      }
+    }
+  },
+  "features": {
+    "ghcr.io/infras-factory/devcontainer-features/riso-bootstrap:1.1.1": {
+      "shellEnhancementLevel": "poweruser"
+    }
+  },
+  "postCreateCommand": "/bin/bash .devcontainer/scripts/post-create.sh"
+}
