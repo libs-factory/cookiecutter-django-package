@@ -1,0 +1,9 @@
+{
+    "project_name": "My Django Package",
+    "project_slug": "{{ cookiecutter.project_name.lower()|replace(' ', '-')|replace('_', '-')|replace('.', '-')|trim() }}",
+    "app_slug": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_')|replace('.', '_')|trim() }}",
+    "description": "A Django package for awesome functionality",
+    "author_name": "Bin Nguyen",
+    "author_email": "{{ cookiecutter.author_name.lower() | trim() |replace(' ', '-') }}@yourdomain.com",
+    "version": "0.1.0"
+}
