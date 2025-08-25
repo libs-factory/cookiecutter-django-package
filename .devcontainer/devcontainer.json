@@ -13,5 +13,8 @@
       "shellEnhancementLevel": "poweruser"
     }
   },
-  "postCreateCommand": "/bin/bash .devcontainer/scripts/post-create.sh"
+  "postCreateCommand": "/bin/bash .devcontainer/scripts/post-create.sh",
+  "mounts": [
+    "source=/Volumes/Data/.tmp,target=${containerWorkspaceFolder}/.tmp,type=bind,consistency=cached"
+  ]
 }

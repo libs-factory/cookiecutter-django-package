@@ -47,8 +47,6 @@ mock-basic: ## Generate basic mock project with minimal features
 	@OUTPUT_DIR="$(TMP_DIR)"; \
 	PROJECT_NAME="django-basic-package"; \
 	PROJECT_SLUG="basic_package"; \
-	rm -rf "$$OUTPUT_DIR"; \
-	mkdir -p "$$(dirname $$OUTPUT_DIR)"; \
 	printf "$(CYAN)Creating basic mock project: $$PROJECT_NAME$(NC)\n"; \
 	cookiecutter . \
 		--no-input \

@@ -62,6 +62,22 @@ collectstatic:
 	@python sandbox/manage.py collectstatic --noinput
 	@echo "${SUCCESS} Static files collected to staticfiles/${NC}"
 
+# Django management commands
+.PHONY: makemigrations
+makemigrations:
+	@echo "${INFO} Creating new migrations...${NC}"
+	@python sandbox/manage.py makemigrations
+
+.PHONY: migrate
+migrate:
+	@echo "${INFO} Applying database migrations...${NC}"
+	@python sandbox/manage.py migrate
+
+.PHONY: createsuperuser
+createsuperuser:
+	@echo "${INFO} Creating Django superuser...${NC}"
+	@python sandbox/manage.py createsuperuser
+
 # Run Django development server with DEBUG=True
 .PHONY: run-debug-server
 run-debug-server:
@@ -74,6 +90,16 @@ run-server: collectstatic
 	@echo "${INFO} Starting Django server (DEBUG=False)...${NC}"
 	@echo "${HINT} Static files will be served by WhiteNoise${NC}"
 	@python sandbox/manage.py runserver
+
+.PHONY: run-debug-shell
+run-debug-shell:
+	@echo "${INFO} Opening Django shell_plus...${NC}"
+	@DEBUG=1 python sandbox/manage.py shell_plus --ipython
+
+.PHONY: run-shell
+run-shell:
+	@echo "${INFO} Opening Django shell...${NC}"
+	@python sandbox/manage.py shell
 
 
 # ==============================================================================
@@ -114,6 +140,12 @@ help:
 	@echo "${YELLOW}Django Commands:${NC}"
 	@echo "  ${GREEN}make ${YELLOW}run-debug-server${NC}      - Run Django development server (DEBUG=True)"
 	@echo "  ${GREEN}make ${YELLOW}run-server${NC}         - Run Django server (DEBUG=False)"
+	@echo "  ${GREEN}make ${YELLOW}run-debug-shell${NC}              - Open Django shell_plus (IPython) (DEBUG=True)"
+	@echo "  ${GREEN}make ${YELLOW}run-shell${NC}              - Open Django shell_plus (IPython) (DEBUG=False)"
+	@echo "  ${GREEN}make ${YELLOW}makemigrations${NC}     - Create new migrations"
+	@echo "  ${GREEN}make ${YELLOW}migrate${NC}            - Apply database migrations"
+	@echo "  ${GREEN}make ${YELLOW}collectstatic${NC}      - Collect static files for production"
+	@echo "  ${GREEN}make ${YELLOW}createsuperuser${NC}    - Create Django superuser"
 	@echo ""
 	@echo "${YELLOW}Testing:${NC}"
 	@echo "  ${GREEN}make ${YELLOW}test${NC}              - Run tests with coverage"
