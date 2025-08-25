@@ -17,7 +17,7 @@ NC = \033[0m # No Color
 .DEFAULT_GOAL := help
 
 # Alias
-PROJECT_NAME := {{ cookiecutter.project_slug }}
+PROJECT_NAME := django-basic-package
 
 
 # Remove temporary files and caches
@@ -53,6 +53,54 @@ setup:
 	@echo "${SUCCESS} $(PROJECT_NAME) development environment ready!${NC}"
 
 
+# ==============================================================================
+# Django Commands
+# ==============================================================================
+.PHONY: collectstatic
+collectstatic:
+	@echo "${INFO} Collecting static files...${NC}"
+	@python sandbox/manage.py collectstatic --noinput
+	@echo "${SUCCESS} Static files collected to staticfiles/${NC}"
+
+# Run Django development server with DEBUG=True
+.PHONY: run-debug-server
+run-debug-server:
+	@echo "${INFO} Starting Django development server (DEBUG=True)...${NC}"
+	@DEBUG=1 python sandbox/manage.py runserver
+
+# Run Django server with DEBUG=False (production-like)
+.PHONY: run-server
+run-server: collectstatic
+	@echo "${INFO} Starting Django server (DEBUG=False)...${NC}"
+	@echo "${HINT} Static files will be served by WhiteNoise${NC}"
+	@python sandbox/manage.py runserver
+
+
+# ==============================================================================
+# TESTING & MOCK PROJECTS
+# ==============================================================================
+# Run tests with coverage
+.PHONY: test
+test:
+	@echo "${INFO} Running tests with coverage for $(PROJECT_NAME)...${NC}"
+	@cd sandbox
+	@DJANGO_SETTINGS_MODULE=config.settings pytest --cov=../basic_package --cov-report=html --cov-report=term tests/
+	@cd ..
+	@echo "${SUCCESS} Tests completed!${NC}"
+
+# Run tests with coverage (verbose)
+.PHONY: test-verbose
+test-verbose:
+	@echo "${INFO} Running tests with coverage (verbose) for $(PROJECT_NAME)...${NC}"
+	@cd sandbox
+	@DJANGO_SETTINGS_MODULE=config.settings pytest -vv --cov=../basic_package --cov-report=html --cov-report=term tests/
+	@cd ..
+	@echo "${SUCCESS} Tests completed!${NC}"
+
+
+# ==============================================================================
+# UTILITIES
+# ==============================================================================
 # Display help
 .PHONY: help
 help:
@@ -62,6 +110,14 @@ help:
 	@echo ""
 	@echo "${YELLOW}Development Setup:${NC}"
 	@echo "  ${GREEN}make ${YELLOW}setup${NC}               - Setup development environment"
+	@echo ""
+	@echo "${YELLOW}Django Commands:${NC}"
+	@echo "  ${GREEN}make ${YELLOW}run-debug-server${NC}      - Run Django development server (DEBUG=True)"
+	@echo "  ${GREEN}make ${YELLOW}run-server${NC}         - Run Django server (DEBUG=False)"
+	@echo ""
+	@echo "${YELLOW}Testing:${NC}"
+	@echo "  ${GREEN}make ${YELLOW}test${NC}              - Run tests with coverage"
+	@echo "  ${GREEN}make ${YELLOW}test-verbose${NC}      - Run tests with coverage (verbose)"
 	@echo ""
 	@echo "${YELLOW}Utilities:${NC}"
 	@echo "  ${GREEN}make ${YELLOW}clean${NC}             - Clean up compiled files"
