@@ -101,6 +101,22 @@ run-shell:
 	@echo "${INFO} Opening Django shell...${NC}"
 	@python sandbox/manage.py shell
 
+# Kill any running Django server processes
+.PHONY: killserver
+killserver:
+	@echo "${INFO} Stopping Django server processes...${NC}"
+	@if pgrep -f "manage.py runserver" > /dev/null; then \
+		pkill -f "manage.py runserver" && \
+		echo "${SUCCESS} Django server stopped${NC}"; \
+	else \
+		echo "${WARNING} No Django server process found${NC}"; \
+	fi
+	@# Also kill any orphaned Python processes on port 8000
+	@if lsof -Pi :8000 -sTCP:LISTEN -t > /dev/null 2>&1; then \
+		lsof -Pi :8000 -sTCP:LISTEN -t | xargs kill -9 2>/dev/null && \
+		echo "${SUCCESS} Killed process on port 8000${NC}"; \
+	fi
+
 
 # ==============================================================================
 # TESTING & MOCK PROJECTS
@@ -109,18 +125,18 @@ run-shell:
 .PHONY: test
 test:
 	@echo "${INFO} Running tests with coverage for $(PROJECT_NAME)...${NC}"
-	@cd sandbox
-	@DJANGO_SETTINGS_MODULE=config.settings pytest --cov=../basic_package --cov-report=html --cov-report=term tests/
-	@cd ..
+	@cd sandbox && \
+	DJANGO_SETTINGS_MODULE=config.settings pytest --cov=../{{cookiecutter.app_slug}} --cov-report=html --cov-report=term tests/ && \
+	cd ..
 	@echo "${SUCCESS} Tests completed!${NC}"
 
 # Run tests with coverage (verbose)
 .PHONY: test-verbose
 test-verbose:
 	@echo "${INFO} Running tests with coverage (verbose) for $(PROJECT_NAME)...${NC}"
-	@cd sandbox
-	@DJANGO_SETTINGS_MODULE=config.settings pytest -vv --cov=../basic_package --cov-report=html --cov-report=term tests/
-	@cd ..
+	@cd sandbox && \
+	DJANGO_SETTINGS_MODULE=config.settings pytest -vv --cov=../{{cookiecutter.app_slug}} --cov-report=html --cov-report=term tests/ && \
+	cd ..
 	@echo "${SUCCESS} Tests completed!${NC}"
 
 
@@ -146,6 +162,7 @@ help:
 	@echo "  ${GREEN}make ${YELLOW}migrate${NC}            - Apply database migrations"
 	@echo "  ${GREEN}make ${YELLOW}collectstatic${NC}      - Collect static files for production"
 	@echo "  ${GREEN}make ${YELLOW}createsuperuser${NC}    - Create Django superuser"
+	@echo "  ${GREEN}make ${YELLOW}killserver${NC}         - Kill any running Django server processes"
 	@echo ""
 	@echo "${YELLOW}Testing:${NC}"
 	@echo "  ${GREEN}make ${YELLOW}test${NC}              - Run tests with coverage"
