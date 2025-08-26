@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 """Post-generation hook for cookiecutter."""
 
+import os
+import shutil
 import sys
 
 
@@ -125,6 +127,18 @@ class MinimalLogger:
 logger = MinimalLogger()
 
 
+def cleanup_cypress_files():
+    """Remove Cypress files if not selected."""
+    use_cypress = "{{ cookiecutter.use_cypress }}"
+
+    if use_cypress == "no":
+        cypress_dir = os.path.join("sandbox", "tests", "e2e")
+        if os.path.exists(cypress_dir):
+            logger.log_info("Removing Cypress E2E testing files (not selected)...")
+            shutil.rmtree(cypress_dir, ignore_errors=True)
+            logger.log_success("Cypress files removed")
+
+
 def display_project_info():
     """Display project information."""
     project_name = "{{ cookiecutter.project_name }}"
@@ -133,6 +147,7 @@ def display_project_info():
     author_name = "{{ cookiecutter.author_name }}"
     author_email = "{{ cookiecutter.author_email }}"
     description = "{{ cookiecutter.description }}"
+    use_cypress = "{{ cookiecutter.use_cypress }}"
 
     logger.log_section("\n📦 Project Information")
     logger.log_subsection("Package Details")
@@ -147,15 +162,30 @@ def display_project_info():
     logger.log_subsection("Description")
     logger.log_section_info(description)
 
+    logger.log_subsection("Features")
+    logger.log_section_info(
+        f"Cypress E2E Testing: {'✅ Enabled' if use_cypress == 'yes' else '❌ Disabled'}"
+    )
+
 
 def display_next_steps():
     """Display next steps for the user."""
+    use_cypress = "{{ cookiecutter.use_cypress }}"
+
     logger.log_notice("Remember to initialize a git repository if you haven't already!")
+
+    if use_cypress == "yes":
+        logger.log_section("\n🧪 Cypress E2E Testing Setup")
+        logger.log_section_info("To get started with E2E testing:")
+        logger.log_section_info("  1. Install Cypress: make e2e-install")
+        logger.log_section_info("  2. Run tests: make e2e-run")
+        logger.log_section_info("  3. Open Cypress GUI: make e2e-open")
 
 
 @logger.workflow("Post-Generation Setup")
 def main():
     """Run post-generation setup."""
+    cleanup_cypress_files()
     display_project_info()
     display_next_steps()
 

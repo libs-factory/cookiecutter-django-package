@@ -1,0 +1,15 @@
+{
+  "name": "{{ cookiecutter.project_slug }}-e2e-tests",
+  "version": "1.0.0",
+  "description": "E2E tests for {{ cookiecutter.project_name }}",
+  "private": true,
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "cy:run:chrome": "cypress run --browser chrome",
+    "cy:run:firefox": "cypress run --browser firefox"
+  },
+  "devDependencies": {
+    "cypress": "^13.6.0"
+  }
+}

@@ -19,7 +19,12 @@ BASE_STEPS=(
     "install_system_packages"
     "setup_python_environment"
 )
+{% if cookiecutter.use_cypress == "yes" %}
+# Add Cypress step when enabled
+TOTAL_STEPS=$(({% raw %}${#BASE_STEPS[@]}{% endraw %} + 1))
+{% else %}
 TOTAL_STEPS={% raw %}${#BASE_STEPS[@]}{% endraw %}
+{% endif %}
 
 # ----------------------------------------
 # Import Utility Functions
@@ -228,6 +233,29 @@ fi
     log_success "Python environment setup completed"
 }
 
+{% if cookiecutter.use_cypress == "yes" %}setup_cypress_dependencies() {
+    local step_id=$1
+    set_step_context "setup_cypress_dependencies"
+
+    log_group_start "Cypress Browser Testing Dependencies"
+
+    log_info "Installing browser testing dependencies for Cypress..."
+    sudo apt-get install -y --no-install-recommends \
+        xvfb \
+        libgtk-3-0 \
+        libgbm-dev \
+        libnotify-dev \
+        libnss3 \
+        libxss1 \
+        libxtst6 \
+        xauth \
+        libasound2-dev \
+        ffmpeg
+
+    log_group_end "Cypress Browser Testing Dependencies"
+    log_success "Cypress dependencies installed successfully"
+}{% endif %}
+
 cleanup() {
     log_group_start "Cleanup"
 
@@ -257,6 +285,11 @@ main() {
     log_step_start "Setup Python environment" {% raw %}$((++current_step)){% endraw %} "$TOTAL_STEPS"
     setup_python_environment $current_step
     log_step_end_with_timing "Python environment setup" "success"
+
+    {% if cookiecutter.use_cypress == "yes" %}# Setup Cypress dependencies
+    log_step_start "Setup Cypress dependencies" $((++current_step)) "$TOTAL_STEPS"
+    setup_cypress_dependencies $current_step
+    log_step_end_with_timing "Cypress dependencies setup" "success"{% endif %}
 
     # Cleanup
     cleanup

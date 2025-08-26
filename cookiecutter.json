@@ -6,5 +6,6 @@
     "author_name": "Bin Nguyen",
     "author_email": "{{ cookiecutter.author_name.lower() | trim() |replace(' ', '-') }}@yourdomain.com",
     "version": "0.1.0",
-    "python_version": ["3.12", "3.13"]
+    "python_version": ["3.12", "3.13"],
+    "use_cypress": ["no", "yes"]
 }

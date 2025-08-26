@@ -60,6 +60,26 @@ mock-basic: ## Generate basic mock project with minimal features
 		author_email="basic@test.com"; \
 	printf "$(GREEN)✓ Basic mock created in $$OUTPUT_DIR/$$PROJECT_NAME$(NC)\n"
 
+# Each mock target is completely independent - no shared variables or functions
+.PHONY: mock-cypress
+mock-cypress: ## Generate cypress mock project with advanced features
+	@OUTPUT_DIR="$(TMP_DIR)"; \
+	PROJECT_NAME="django-mock-cypress"; \
+	PROJECT_SLUG="cypress_package"; \
+	printf "$(CYAN)Creating cypress mock project: $$PROJECT_NAME$(NC)\n"; \
+	cookiecutter . \
+		--no-input \
+		--overwrite-if-exists \
+		--output-dir "$$OUTPUT_DIR" \
+		project_name="Django Modern Admin" \
+		project_slug="$$PROJECT_NAME" \
+		app_slug="$$PROJECT_SLUG" \
+		description="A cypress mock project" \
+		author_name="Basic Author" \
+		author_email="basic@test.com" \
+		use_cypress=yes; \
+	printf "$(GREEN)✓ Cypress mock created in $$OUTPUT_DIR/$$PROJECT_NAME$(NC)\n"
+
 .PHONY: mock-all
 mock-all: ## Generate all mock projects for comprehensive testing
 	@$(MAKE) mock-basic
