@@ -6,7 +6,7 @@ set -e
 # Local Variables
 # ----------------------------------------
 FEATURE_DIR="/usr/local/share/riso-bootstrap"
-PROJECT_NAME="cookiecutter-django-package"
+PROJECT_NAME="Cookiecutter Django Package"
 GITHUB_USERNAME="riso-tech"
 
 # Files to import from riso-bootstrap feature
@@ -14,17 +14,6 @@ IMPORT_FILES=(
     "$FEATURE_DIR/utils/layer-0/logger.sh:Logger utilities"
     "$FEATURE_DIR/utils/layer-0/package-manager.sh:Package manager utilities"
 )
-
-# Calculate total steps
-BASE_STEPS=(
-    "install_system_packages"
-    "setup_python_environment"
-    "setup_database_clients"
-    "setup_cypress_dependencies"
-    "configure_development_environment"
-    "project_specific_setup"
-)
-TOTAL_STEPS=${#BASE_STEPS[@]}
 
 # ----------------------------------------
 # Import Utility Functions
@@ -50,6 +39,13 @@ import_utility_files() {
 
 # Import utilities from riso-bootstrap
 import_utility_files IMPORT_FILES
+
+# Calculate total steps
+BASE_STEPS=(
+    "install_system_packages"
+    "setup_python_environment"
+)
+TOTAL_STEPS=${#BASE_STEPS[@]}
 
 # ----------------------------------------
 # Installation Functions
@@ -276,17 +272,17 @@ cleanup() {
 # Main Execution
 # ----------------------------------------
 main() {
-    set_workflow_context "Cookiecutter Django Package Post-Create Setup"
-    log_workflow_start "Cookiecutter Django Package Post-Create Setup"
+    set_workflow_context "$PROJECT_NAME Post-Create Setup"
+    log_workflow_start "$PROJECT_NAME Post-Create Setup"
 
     local current_step=0
 
-    # Step 1: Install system packages
+    # Step: Install system packages
     log_step_start "Install system packages" $((++current_step)) "$TOTAL_STEPS"
     install_system_packages $current_step
     log_step_end_with_timing "System packages installation" "success"
 
-    # Step 2: Setup Python environment
+    # Step: Setup Python environment
     log_step_start "Setup Python environment" $((++current_step)) "$TOTAL_STEPS"
     setup_python_environment $current_step
     log_step_end_with_timing "Python environment setup" "success"
@@ -294,9 +290,9 @@ main() {
     # Cleanup
     cleanup
 
-    log_workflow_end "Cookiecutter Django Package Post-Create Setup" "success"
+    log_workflow_end "$PROJECT_NAME Post-Create Setup" "success"
 
-    display_bold_message "Post-create setup completed successfully!"
+    display_bold_message "Your $PROJECT_NAME development environment is ready."
 }
 
 main "$@"

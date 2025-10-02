@@ -14,18 +14,6 @@ IMPORT_FILES=(
     "$FEATURE_DIR/utils/layer-0/logger.sh:Logger utilities"
 )
 
-# Calculate total steps
-BASE_STEPS=(
-    "install_system_packages"
-    "setup_python_environment"
-)
-{% if cookiecutter.use_cypress == "yes" %}
-# Add Cypress step when enabled
-TOTAL_STEPS=$(({% raw %}${#BASE_STEPS[@]}{% endraw %} + 1))
-{% else %}
-TOTAL_STEPS={% raw %}${#BASE_STEPS[@]}{% endraw %}
-{% endif %}
-
 # ----------------------------------------
 # Import Utility Functions
 # ----------------------------------------
@@ -50,6 +38,14 @@ import_utility_files() {
 
 # Import utilities from riso-bootstrap
 import_utility_files IMPORT_FILES
+
+# Calculate total steps
+BASE_STEPS=(
+    "install_system_packages"
+    "setup_python_environment"{% if cookiecutter.use_cypress == "yes" %}
+    "setup_cypress_dependencies"{% endif %}
+)
+TOTAL_STEPS={% raw %}${#BASE_STEPS[@]}{% endraw %}
 
 # ----------------------------------------
 # Installation Functions
@@ -276,12 +272,12 @@ main() {
 
     local current_step=0
 
-    # Step 1: Install system packages
+    # Step: Install system packages
     log_step_start "Install system packages" {% raw %}$((++current_step)){% endraw %} "$TOTAL_STEPS"
     install_system_packages $current_step
     log_step_end_with_timing "System packages installation" "success"
 
-    # Step 2: Setup Python environment
+    # Step: Setup Python environment
     log_step_start "Setup Python environment" {% raw %}$((++current_step)){% endraw %} "$TOTAL_STEPS"
     setup_python_environment $current_step
     log_step_end_with_timing "Python environment setup" "success"
